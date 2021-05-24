@@ -1,23 +1,26 @@
+const {response} = require('express');
 var express = require('express');
 var router = express.Router();
+var connection = require('./config/db'); // calling the connection from the database
 
-const credential = {
-  email: 'admin@gmail.com',
-  password: 'admin123',
-};
-
-// login user
+// login user with dashboard
 router.post('/login', (req, res) => {
-  if (
-    req.body.email == credential.email &&
-    req.body.password == credential.password
-  ) {
-    res.session.user = req.body.email;
-    res.redirect('/route/dashboard');
-    // res.end('Login Successful!');
-  } else {
-    res.end('Invalid username');
-  }
+  connection.query('SELECT * FROM users', (error, response) => {
+      const emailForm = req.body.email,
+        passwordForm = req.body.password;
+
+      if (response) {
+        const validated = response.find(row => {
+          return row.email == emailForm && row.password == passwordForm;
+        })
+        if (validated == undefined) {
+          res.end('Invalid User');
+        } else {
+          req.session.user = req.body.email;
+          res.redirect('dashboard');
+        }
+      }
+    });
 });
 
 // route for dashboard
