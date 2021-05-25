@@ -5,7 +5,7 @@
     <h3 class="title-dashboard">Welcome to Schedule</h3>
     <h5><%= locals.user ? user: "User"%></h5>
 
-    <a href="">Add New Schedule</a>
+    <button type="button"><a href="/new">Add New Schedule</a></button>
 
 
     <table class="table text-nowrap w-25 mt-5">
@@ -26,7 +26,7 @@
         %>
         <tr>
           <td><%=i; %></td>
-          <td><%=data.first_name; %></td>
+          <td><a href="/user/<%= data.id %>"><%=data.first_name; %></a></td>
           <td><%=data.week_day %></td>
           <td><%=data.start_time %></td>
           <td><%=data.end_time %></td>
