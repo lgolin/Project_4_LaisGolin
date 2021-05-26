@@ -27,7 +27,7 @@
         <tr>
           <td><%=i; %></td>
           <td><a href="/user/<%= data.id %>"><%=data.first_name; %></a></td>
-          <td><%=data.week_day %></td>
+          <td><%=days[data.week_day] %></td>
           <td><%=data.start_time %></td>
           <td><%=data.end_time %></td>
           <td scope="col"><a href="/dashboard/edit/<%=data.id%>">Edit</a></td>

@@ -2,6 +2,15 @@ const {response} = require('express');
 var express = require('express');
 var router = express.Router();
 var connection = require('./config/db'); // calling the connection from the database
+const days = {
+  1: 'Monday',
+  2: 'Tuesday',
+  3: 'Wednesday',
+  4: 'Thursday',
+  5: 'Friday',
+  6: 'Saturday',
+  7: 'Sunday',
+};
 
 // login user with dashboard
 router.post('/login', (req, res) => {
@@ -30,7 +39,11 @@ router.get('/dashboard', function (req, res, next) {
     LEFT JOIN users ON schedules.ID_user = users.Id;`;
   connection.query(sql, function (err, data, fields) {
     if (err) throw err;
-    res.render('dashboard', {title: 'dashboard', userData: data});
+    res.render('dashboard', {
+      title: 'dashboard',
+      userData: data,
+      days: days,
+    });
   });
 });
 
