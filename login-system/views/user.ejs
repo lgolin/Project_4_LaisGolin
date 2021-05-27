@@ -1,0 +1,49 @@
+<%-include('header')-%>
+
+<div class="text-center tcenter-div mt-5" id="login">
+    <div class="container w-25 boder py-5 mt-5">
+        <h3 class="title-dashboard">Welcome to Schedule</h3>
+        <h5><%= locals.user ? user: "User"%></h5>
+
+        <table class="table text-nowrap w-25 mt-5">
+            <thead>
+                <tr>
+                    <th scope="row">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Surname</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Week Day</th>
+                    <th scope="col">Start</th>
+                    <th scope="col">End</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+                <%
+              if(userData.length!=0){
+              var i=1;
+              userData.forEach(function(data){
+              %>
+                <tr>
+                    <td><%=i; %></td>
+                    <td><%=data.first_name %></td>
+                    <td><%=data.surname %></td>
+                    <td><%=data.email %></td>
+                    <td><%=days[data.week_day] %></td>
+                    <td><%=data.start_time %></td>
+                    <td><%=data.end_time %></td>
+                    <td scope="col"><a href="/dashboard/edit/<%=data.id%>">Edit</a></td>
+                    <td scope="col"><a href="/dashboard/delete/<%=data.id%>">Delete</a></td>
+                </tr>
+                <%  i++; }) %>
+                <% } else{ %>
+                <tr>
+                    <td colspan="7">No Data Found</td>
+                </tr>
+                <% } %>
+        </table>
+
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<%-include('footer')-%>

@@ -32,7 +32,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use('/route', router);
+app.use('/', router);
 
 // Home route
 app.get('/', (req, res) => {

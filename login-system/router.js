@@ -72,4 +72,59 @@ router.get('/logout', (req, res) => {
   });
 });
 
+router.get('/user/:ID_user', function (req, res, next) {
+  var sql = `SELECT * FROM schedules 
+    LEFT JOIN users ON schedules.ID_user = users.Id;`;
+  connection.query(sql, function (err, data, fields) {
+    if (err) throw err;
+    console.log(data);
+    res.render('user', {
+      title: 'user',
+      userData: data,
+      days: days,
+    });
+  });
+});
+
+// insert data to database
+// router.get('/user/:ID_user', (req, res) => {
+//   const {ID_user} = req.params;
+//   console.log({ ID_user });
+
+//    // 'Users' table connection
+//   connection.query(
+//     `SELECT * FROM users WHERE users.Id = ${ID_user}`,
+//     (error, response) => {
+//       if (error) throw error;
+
+//       // 'Schedules' table connection
+//       connection.query(
+//         `SELECT * FROM schedules LEFT JOIN users ON schedules.ID_user = users.Id WHERE schedules.ID_user = ${ID_user}`,
+//         (errorSchedules, schedules) => {
+//           if (errorSchedules) throw error;
+
+//           let userSchedules = [];
+
+//           schedules.forEach((element) => {
+//             let rowInformation = {
+//               name: element.name,
+//               lastName: element.surname,
+//               email: element.email,
+//               days: days,
+//               startTime: element.start_time,
+//               endTime: element.end_time,
+//             };
+//             userSchedules.push(rowInformation);
+//           });
+
+//           return res.render('user', {
+//             user: response[0],
+//             schedules: userSchedules,
+//           });
+//         }
+//       );
+//     }
+//   );
+// });
+
 module.exports = router;

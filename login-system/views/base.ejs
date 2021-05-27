@@ -6,12 +6,12 @@
       <h2 class="fw-bold">Login System</h2>
       <span>Log in for the existing user</span>
       <% if(locals.logout){ %>
-        <div class="alter alert-success text-center">
-          <%= logout %>
-        </div>
+      <div class="alter alert-success text-center">
+        <%= logout %>
+      </div>
       <% } %>
     </div>
-    <form action="/route/login" method="POST">
+    <form action="/login" method="POST">
       <div class="form-group">
         <input type="email" class="form-control" placeholder="email" name="email">
         <small class="form-text text-muted" id="register-text">Register email address</small>
