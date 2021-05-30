@@ -1,25 +1,25 @@
 <%-include('header')-%>
 
 <div class="text-center tcenter-div mt-5" id="login">
-  <div class="container w-25 boder py-5 mt-5">
+  <div class="container boder py-5 mt-5">
     <h3 class="title-dashboard">Welcome to Schedule</h3>
-    <h5><%= locals.user ? user: "User"%></h5>
+    <h5>Current user: <%= userName %></h5>
     <hr>
-    <h6>Please select a user to see schedule</h5>
+    <h6>Please select a user to see schedule</h6>
 
       <div class="row justify-content-center">
         <div class="col-auto">
-          <table class="table-responsive table w-25 text-nowrap mt-5">
+          <table class="table-responsive table text-nowrap mt-5">
             <thead>
               <tr>
                 <th scope="row">ID</th>
                 <th scope="col">Name</th>
                 <th scope="col">Email</th>
-                <!-- <th scope="col">Week Day</th>
-                <th scope="col">Start</th>
-                <th scope="col">End</th>
-                <th scope="col">Edit</th>
-                <th scope="col">Delete</th> -->
+<!--                 <th scope="col">Week Day</th>-->
+<!--                <th scope="col">Start</th>-->
+<!--                <th scope="col">End</th>-->
+<!--                <th scope="col">Edit</th>-->
+<!--                <th scope="col">Delete</th>-->
               </tr>
               <%
         if(userData.length!=0){
@@ -30,11 +30,11 @@
                 <td><%=i; %></td>
                 <td><a href="/user/<%= data.ID_user %>"><%=data.first_name; %></a></td>
                 <td><%=data.email %></td>
-                <!-- <td><%=days[data.week_day] %></td> 
-                <td><%=data.start_time %></td>
-                <td><%=data.end_time %></td>
-                <td scope="col"><a href="/dashboard/edit/<%=data.id%>">Edit</a></td>
-                <td scope="col"><a href="/dashboard/delete/<%=data.id%>">Delete</a></td> -->
+<!--                <td><%=days[data.week_day] %></td>-->
+<!--                <td><%=data.start_time %></td>-->
+<!--                <td><%=data.end_time %></td>-->
+<!--                <td scope="col"><a href="/dashboard/edit/<%=data.id%>">Edit</a></td>-->
+<!--                <td scope="col"><a href="/dashboard/delete/<%=data.id%>">Delete</a></td>-->
               </tr>
               <%  i++; }) %>
               <% } else{ %>

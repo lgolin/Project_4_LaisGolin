@@ -1,0 +1,35 @@
+<%-include('header')-%>
+
+<div class="text-center center-div mt-5" id="login">
+    <div class="container border py-1 mt-2">
+        <h3 class="title-dashboard mt-2">Welcome to Schedule</h3>
+        <form class="form-container" action="http://localhost:5000/newSchedule" method="POST">
+            <h5>Current user: <%= userName %></h5>
+
+            <div class="input-group mb-3 w-25">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="dayWeek">Day of the week</label>
+                </div>
+                <select class="custom-select w-100 py-1 mt-1" name="dayWeek" type="number">
+                    <option selected value="1">Monday</option>
+                    <option value="2">Tuesday</option>
+                    <option value="3">Wednesday</option>
+                    <option value="4">Thursday</option>
+                    <option value="5">Friday</option>
+                    <option value="6">Saturday</option>
+                    <option value="7">Sunday</option>
+                </select>
+            </div>
+
+            <span id="inputGroup-sizing-sm">Start Time</span>
+            <input type="time" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" name="startTime">
+
+            <span id="inputGroup-sizing-sm">End Time</span>
+            <input type="time" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" name="endTime">
+
+            <button type="submit" class="btn btn-secondary rounded-pi">New Schedule</button>
+        </form>
+    </div>
+</div>
+
+<%-include('footer')-%>

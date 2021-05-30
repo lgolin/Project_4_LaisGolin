@@ -43,3 +43,5 @@ app.get('/', (req, res) => {
 app.listen(port, () =>
   console.log('Listening to the server http://localhost:5000')
 );
+
+module.exports = app;

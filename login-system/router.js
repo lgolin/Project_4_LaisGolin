@@ -1,7 +1,7 @@
 const {response} = require('express');
-var express = require('express');
-var router = express.Router();
-var connection = require('./config/db'); // calling the connection from the database
+const express = require('express');
+const router = express.Router();
+const connection = require('./config/db'); // calling the connection from the database
 const days = {
   1: 'Monday',
   2: 'Tuesday',
@@ -16,24 +16,28 @@ const days = {
 router.post('/login', (req, res) => {
   connection.query('SELECT * FROM users', (error, response) => {
     const emailForm = req.body.email,
-      passwordForm = req.body.password;
+        passwordForm = req.body.password;
 
     if (response) {
-      const validated = response.find((row) => {
+      const currentUser = response.find((row) => {
         return row.email == emailForm && row.password == passwordForm;
       });
 
-      if (validated == undefined) {
+      if (currentUser == undefined) {
         res.end('Invalid User or Password, please try again');
       } else {
-        req.session.user = req.body.email;
+        req.session.user = {
+          id: currentUser.Id,
+          email: currentUser.email,
+          name: currentUser.first_name
+        }
         res.redirect('dashboard');
       }
     }
   });
 });
 
-// this script to fetch data from MySQL databse table
+// this script to fetch data from MySQL database table
 router.get('/dashboard', function (req, res, next) {
   var sql = `SELECT * FROM schedules 
     LEFT JOIN users ON schedules.ID_user = users.Id;`;
@@ -43,18 +47,9 @@ router.get('/dashboard', function (req, res, next) {
       title: 'dashboard',
       userData: data,
       days: days,
+      userName: req.session.user.name
     });
   });
-});
-
-// route for dashboard
-router.get('/dashboard', (req, res) => {
-  // res.render('dashboard', {user: req.session.user});
-  if (req.session.user) {
-    res.render('dashboard', {user: req.session.user});
-  } else {
-    res.send('Unauthorize User');
-  }
 });
 
 // route for logout
@@ -72,59 +67,45 @@ router.get('/logout', (req, res) => {
   });
 });
 
+// get user ID
 router.get('/user/:ID_user', function (req, res, next) {
-  var sql = `SELECT * FROM schedules 
-    LEFT JOIN users ON schedules.ID_user = users.Id;`;
+  const {ID_user} = req.params;
+  const sql = `SELECT * FROM schedules 
+    LEFT JOIN users ON schedules.ID_user = users.Id WHERE schedules.ID_user = ${ID_user} `;
   connection.query(sql, function (err, data, fields) {
     if (err) throw err;
-    console.log(data);
     res.render('user', {
       title: 'user',
+      ID_user: ID_user,
       userData: data,
       days: days,
+      userName: req.session.user.name
     });
   });
 });
 
-// insert data to database
-// router.get('/user/:ID_user', (req, res) => {
-//   const {ID_user} = req.params;
-//   console.log({ ID_user });
+// GET new schedule
+router.get('/newSchedule', (req, res) => {
+  res.render('newSchedule', {userName: req.session.user.name});
+});
 
-//    // 'Users' table connection
-//   connection.query(
-//     `SELECT * FROM users WHERE users.Id = ${ID_user}`,
-//     (error, response) => {
-//       if (error) throw error;
+// add new schedule
+router.post('/newSchedule', (req, res) => {
+  const scheduledUser = req.session.user.id;
+  const days = req.body.dayWeek;
+  const startTime = req.body.startTime;
+  const endTime = req.body.endTime;
+  // console.log(req.body.dayWeek)
 
-//       // 'Schedules' table connection
-//       connection.query(
-//         `SELECT * FROM schedules LEFT JOIN users ON schedules.ID_user = users.Id WHERE schedules.ID_user = ${ID_user}`,
-//         (errorSchedules, schedules) => {
-//           if (errorSchedules) throw error;
-
-//           let userSchedules = [];
-
-//           schedules.forEach((element) => {
-//             let rowInformation = {
-//               name: element.name,
-//               lastName: element.surname,
-//               email: element.email,
-//               days: days,
-//               startTime: element.start_time,
-//               endTime: element.end_time,
-//             };
-//             userSchedules.push(rowInformation);
-//           });
-
-//           return res.render('user', {
-//             user: response[0],
-//             schedules: userSchedules,
-//           });
-//         }
-//       );
-//     }
-//   );
-// });
+  connection.query('INSERT INTO schedules (ID_user, week_day, start_time, end_time) VALUES(?,?,?,?)',
+       [scheduledUser, days, startTime, endTime],
+      (error, response) => {
+        if (error) throw error;
+        else {
+          console.log("New schedule has been added");
+          res.redirect("/dashboard")
+        }
+      })
+})
 
 module.exports = router;

@@ -1,11 +1,12 @@
 <%-include('header')-%>
 
 <div class="text-center tcenter-div mt-5" id="login">
-    <div class="container w-25 boder py-5 mt-5">
+    <div class="container boder py-5 mt-5">
         <h3 class="title-dashboard">Welcome to Schedule</h3>
-        <h5><%= locals.user ? user: "User"%></h5>
+        <h5>Current user: <%= userName %></h5>
+        <a href="/newSchedule">New Schedule</a>
 
-        <table class="table text-nowrap w-25 mt-5">
+        <table class="table text-nowrap mt-5">
             <thead>
                 <tr>
                     <th scope="row">ID</th>
@@ -25,7 +26,7 @@
               %>
                 <tr>
                     <td><%=i; %></td>
-                    <td><%=data.first_name %></td>
+                    <td><a href="/user/<%= data.ID_user %>"><%=data.first_name; %></a></td>
                     <td><%=data.surname %></td>
                     <td><%=data.email %></td>
                     <td><%=days[data.week_day] %></td>
