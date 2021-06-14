@@ -1,3 +1,4 @@
+const { render } = require('ejs');
 const {response} = require('express');
 const express = require('express');
 const router = express.Router();
@@ -22,12 +23,13 @@ router.post('/login', (req, res) => {
       const currentUser = response.find((row) => {
         return row.email == emailForm && row.password == passwordForm;
       });
-
+      
+      console.log(currentUser);
       if (currentUser == undefined) {
         res.end('Invalid User or Password, please try again');
       } else {
         req.session.user = {
-          id: currentUser.Id,
+          id: currentUser.user_id,
           email: currentUser.email,
           name: currentUser.first_name
         }
@@ -40,7 +42,7 @@ router.post('/login', (req, res) => {
 // this script to fetch data from MySQL database table
 router.get('/dashboard', function (req, res, next) {
   var sql = `SELECT * FROM schedules 
-    LEFT JOIN users ON schedules.ID_user = users.Id;`;
+    LEFT JOIN users ON schedules.ID_user = users.user_id;`;
   connection.query(sql, function (err, data, fields) {
     if (err) throw err;
     res.render('dashboard', {
@@ -71,7 +73,7 @@ router.get('/logout', (req, res) => {
 router.get('/user/:ID_user', function (req, res, next) {
   const {ID_user} = req.params;
   const sql = `SELECT * FROM schedules 
-    LEFT JOIN users ON schedules.ID_user = users.Id WHERE schedules.ID_user = ${ID_user} `;
+    LEFT JOIN users ON schedules.ID_user = users.user_id WHERE schedules.ID_user = ${ID_user} `;
   connection.query(sql, function (err, data, fields) {
     if (err) throw err;
     res.render('user', {
@@ -86,12 +88,14 @@ router.get('/user/:ID_user', function (req, res, next) {
 
 // GET new schedule
 router.get('/newSchedule', (req, res) => {
+  // console.log(req.session.user.name)
   res.render('newSchedule', {userName: req.session.user.name});
 });
 
 // add new schedule
 router.post('/newSchedule', (req, res) => {
   const scheduledUser = req.session.user.id;
+  console.log(scheduledUser);
   const days = req.body.dayWeek;
   const startTime = req.body.startTime;
   const endTime = req.body.endTime;
@@ -103,6 +107,28 @@ router.post('/newSchedule', (req, res) => {
         if (error) throw error;
         else {
           console.log("New schedule has been added");
+          res.redirect("/dashboard")
+        }
+      })
+});
+
+router.get('/newUser', (req, res) => {
+  res.render('newUser');
+})
+
+// add new user
+router.post('/newUser', (req, res) => { 
+  const first_name = req.body.first_name;
+  const surname = req.body.surname;
+  const email = req.body.email;
+  const password = req.body.password;
+  
+  connection.query('INSERT INTO users (first_name, surname, email, password) VALUES(?,?,?,?)',
+       [first_name, surname, email, password],
+      (error, response) => {
+        if (error) throw error;
+        else {
+          console.log("New user has been added");
           res.redirect("/dashboard")
         }
       })
